@@ -199,9 +199,9 @@ class P2PService {
     final networkSelf = node.config['p2p']?['self']?['tcp'];
 
     if (networkSelf != null) {
-      final socket = await ServerSocket.bind('0.0.0.0', networkSelf['port']);      
+      final socket = await ServerSocket.bind('0.0.0.0', networkSelf['port']);
       socket.listen(
-        (peerSocket) {        
+        (peerSocket) {
           final p = TcpPeer(
             peerSocket,
             connectionUris: [],
@@ -241,7 +241,7 @@ class P2PService {
     }
   }
 
-  Future<void> onNewPeer(Peer peer, {required bool verifyId}) async {    
+  Future<void> onNewPeer(Peer peer, {required bool verifyId}) async {
     peer.challenge = node.crypto.generateRandomBytes(32);
 
     final initialAuthPayloadPacker = Packer();
@@ -266,7 +266,7 @@ class P2PService {
           String? peerNetworkId;
           try {
             peerNetworkId = u.unpackString();
-          } on FormatException {/* No custom network */}
+          } catch (_) {/* No custom network */}
 
           if (peerNetworkId != networkId) {
             throw 'Peer is in different network: $peerNetworkId';
